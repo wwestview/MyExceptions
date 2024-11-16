@@ -1,5 +1,7 @@
-﻿using System.Threading.Channels;
-
+﻿using System;
+using System.Drawing.Text;
+using System.Text.RegularExpressions;
+using System.Drawing;
 class Exceptions
 {
     static void FileProcessing()
@@ -70,6 +72,30 @@ class Exceptions
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+        static void Pictures()
+        {
+            
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
+            Bitmap image;
+            Regex searchPattern = new Regex("^((bmp)|(gif)|(tiff?)|(jpe?g)|(png))$", RegexOptions.IgnoreCase);
+            foreach (var file in files)
+            {
+                try
+                {
+                    image = new Bitmap(file);
+                    image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    image.Save($"{Path.GetFileName(file)}-mirrored.gif");
+                }
+                catch
+                {
+                    if (searchPattern.IsMatch(Path.GetExtension(file)))
+                    {
+                        Console.WriteLine($"Image {file} can not read..");
+                    }
+
+                }
+            }
         }
     }
     static void Main()
